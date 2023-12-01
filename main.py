@@ -2,6 +2,10 @@ import cv2
 import mediapipe as mp
 # import time
 
+# hay que convertir las coordenadas de los landmarks a coordenadas de la imagen
+# es lo q me devuelve coordenadas de independiente de la resolucion de la imagen
+# para eso hay q multiplicar por las dimensiones de la imagen
+# para eso hay q obtener las dimensiones de la imagen
 
 def landMarkToCoodinates(tip, dim) -> list:
     return (int(tip.x*dim[0]), int(tip.y*dim[1]))
@@ -25,13 +29,23 @@ def scalingProcess(hand, inc):
     dis1 = distance(tip_4, tip_8)
     dis2 = distance(internal_3, internal_6)
 
+    # los ration son indep de lo valores absolutoos
+    # los % son indep 
+    # una proporcion
+    # proporciioones entre la punta del dedo y la parte interna del dedo
+    # peuqeño/grande ---> proporcion pequeña
+    # grande/pequeño ---> proporcion grande
+    # la distancia varia si estas mas cerca o mas lejos de la camara
+    # la proporcion es la misma
+    # regioon de isteris
+    
     ratio = dis1/dis2
     if ratio > 1.22:
         return inc, [tip_4, tip_8]
     elif ratio < 0.67:
         return -inc, [tip_4, tip_8]
 
-    return 0, ()
+    return 0, () 
 
 
 def mpHandsInit():
